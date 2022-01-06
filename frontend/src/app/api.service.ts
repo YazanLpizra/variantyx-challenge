@@ -19,7 +19,7 @@ export class ApiService {
         return this.http.get<IExternalArticle[]>(Endpoints.getAllArticles());
     }
 
-    getArticleAbstract(article: IExternalArticle): Observable<string> {
-        return this.http.get<string>(Endpoints.getArticleAbstract(article));
+    getArticleAbstract(article: IExternalArticle): Observable<{abstract: string, message: string}> {
+        return this.http.get<{abstract: string, message: string}>(Endpoints.getArticleAbstract(article));
     }
 }
