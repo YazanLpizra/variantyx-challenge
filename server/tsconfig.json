@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "lib": ["es2021"],
+        "target": "es6",
+        "module": "commonjs",
+        "rootDirs": [
+            "./",
+            "../common/"
+        ],
+        "outDir": "./build",
+        "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "paths": {
+            "@common/*": [
+                "../common/*"
+            ]
+        }
+    }
+}
