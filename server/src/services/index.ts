@@ -1,3 +1,4 @@
 export * from './ArticleRetrieverService';
+export * from './ArticleRetrieverService';
 export * from './HtmlParserService';
-export * from './MockExternalArticlesDaoService';
+export * from './ExternalArticlesService';

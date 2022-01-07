@@ -1,6 +1,6 @@
 import { IExternalArticle } from '@common/interfaces';
 import express from 'express';
-import { MockExternalArticlesDaoService, ArticleRetrieverService, HtmlParserService } from '../services';
+import { ExternalArticlesService, ArticleRetrieverService, HtmlParserService } from '../services';
 
 // export const AllowedArticleTypes = ['pubmed', 'omim', 'hgmd'] as const;
 // export type AllowedArticleTypes = typeof AllowedArticleTypes[number];
@@ -13,7 +13,7 @@ const externalArticlesRouter = express.Router()
 
 // GET all articles
 externalArticlesRouter.get('/', async function (req, res) {
-    const articles = await MockExternalArticlesDaoService.getAllArticles();
+    const articles = await ExternalArticlesService.getAllArticles();
     res.status(200).json(articles);
 });
 
