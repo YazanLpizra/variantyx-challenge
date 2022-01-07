@@ -30,12 +30,9 @@ externalArticlesRouter.get('/:type/:id/abstract', async function (req, res) {
     }
 
     try {
-        const articlePageHtml = await ArticleRetrieverService.fetchArticle(article);
-        let abstract = HtmlParserService.queryHtmlBySelector(await articlePageHtml.data, '#enc-abstract');
+        const abstract = await ArticleRetrieverService.fetchArticleAbstract(article);
 
-        if (abstract) {
-            abstract = abstract.toString();
-        } else {
+        if (!abstract) {
             return res.status(400).json({
                 message: 'Error: Abstract could not be fetched for the article',
                 abstract: null
