@@ -1,13 +1,6 @@
-import { AllowedArticleTypes, AllowedArticleTypesList, IExternalArticle } from '@common/interfaces';
+import { AllowedArticleTypes, IExternalArticle } from '@common/interfaces';
 import express from 'express';
 import { ExternalArticlesService, ArticleRetrieverService, HtmlParserService } from '../services';
-
-// export const AllowedArticleTypes = ['pubmed', 'omim', 'hgmd'] as const;
-// export type AllowedArticleTypes = typeof AllowedArticleTypes[number];
-
-// export function isAllowedArticleType(type: string): type is AllowedArticleTypes {
-//     return AllowedArticleTypes.includes(type as any);
-// }
 
 const externalArticlesRouter = express.Router()
 
@@ -21,14 +14,14 @@ externalArticlesRouter.get('/', async function (req, res) {
 externalArticlesRouter.get('/:type/:id/abstract', async function (req, res) {
     const { type, id } = req.params;
 
-    const isValidType = function(_type: string): _type is AllowedArticleTypes { 
-        // AllowedArticleTypesList.includes(_type) doesnt work because list is defined as readonly/const
-        return AllowedArticleTypesList.findIndex(_allowedType => _allowedType === _type) !== -1; 
-    }
+    // const isValidType = function(_type: string): _type is AllowedArticleTypes { 
+    //     // AllowedArticleTypesList.includes(_type) doesnt work because list is defined as readonly/const
+    //     return AllowedArticleTypesList.findIndex(_allowedType => _allowedType === _type) !== -1; 
+    // }
 
     let article: IExternalArticle;
-    if (isValidType(type)) {
-        article = { type, id };
+    if ([''].includes(type)) {
+        article = { type: type as any, id };
     } else {
         res.status(400).json({ message: 'Error: Invalid type passed in url' });
         return;

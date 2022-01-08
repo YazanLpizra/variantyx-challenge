@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IExternalArticle } from '@common/interfaces';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 class Endpoints {
     static getAllArticles() { return `/api/articles`; }
@@ -13,10 +13,19 @@ class Endpoints {
 })
 export class ApiService {
 
-    constructor(private http: HttpClient) { }
+    // overkill for this usecase
+    articles$: BehaviorSubject<IExternalArticle[]>;
 
-    getExternalArticles(): Observable<IExternalArticle[]> {
-        return this.http.get<IExternalArticle[]>(Endpoints.getAllArticles());
+    constructor(private http: HttpClient) { 
+        this.articles$ = new BehaviorSubject<IExternalArticle[]>([]);
+        this.loadExternalArticles().subscribe();
+    }
+
+    loadExternalArticles(): Observable<IExternalArticle[]> {
+        return this.http.get<IExternalArticle[]>(Endpoints.getAllArticles())
+            .pipe(
+                tap(articles => this.articles$.next(articles))
+            );
     }
 
     getArticleAbstract(article: IExternalArticle): Observable<{abstract: string, message: string}> {

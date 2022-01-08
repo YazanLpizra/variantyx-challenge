@@ -32,7 +32,7 @@ export class ArticleListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.apiService.getExternalArticles().subscribe(articles => {
+        this.apiService.articles$.subscribe(articles => {
             this.dataSource.data = articles;
         });
     }

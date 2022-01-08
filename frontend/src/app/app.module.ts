@@ -8,13 +8,17 @@ import { MaterialModule } from './material.module';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ApiService } from './api.service';
 import { ApiInterceptor } from './api.interceptor';
+import { AppRoutingModule } from './app-routing.module';
+import { NotFoundComponent } from './not-found.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        ArticleListComponent
+        ArticleListComponent,
+        NotFoundComponent
     ],
     imports: [
+        AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
