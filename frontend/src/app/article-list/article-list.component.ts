@@ -44,7 +44,11 @@ export class ArticleListComponent implements OnInit {
             ? undefined
             : article;
 
-        this.apiService.getArticleAbstract(article).subscribe(
+        if (!this.expandedArticle) {
+            return;
+        }
+
+        this.apiService.getArticleAbstract(this.expandedArticle).subscribe(
             (result: { abstract: string, message: string }) => {
                 this.abstract = result.abstract;
                 this.loading = false;
