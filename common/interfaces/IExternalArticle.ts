@@ -3,5 +3,5 @@ export interface IExternalArticle {
     id: string;
 }
 
-export const AllowedArticleTypes = ['pubmed', 'omim', 'hgmd'] as const;
-export type AllowedArticleTypes = typeof AllowedArticleTypes[number];
+export const AllowedArticleTypesList = ['pubmed', 'omim', 'hgmd'] as const;
+export type AllowedArticleTypes = typeof AllowedArticleTypesList[number];

@@ -50,7 +50,6 @@ export class ArticleListComponent implements OnInit {
                 this.loading = false;
             },
             error => {
-                console.log(error);
                 this.snackBar.open(error.error.message, 'Okay', { duration: 3 * 1000 });
                 this.loading = false;
             }

@@ -1,4 +1,4 @@
-import { IExternalArticle } from '@common/interfaces';
+import { AllowedArticleTypes, AllowedArticleTypesList, IExternalArticle } from '@common/interfaces';
 import express from 'express';
 import { ExternalArticlesService, ArticleRetrieverService, HtmlParserService } from '../services';
 
@@ -21,9 +21,14 @@ externalArticlesRouter.get('/', async function (req, res) {
 externalArticlesRouter.get('/:type/:id/abstract', async function (req, res) {
     const { type, id } = req.params;
 
+    const isValidType = function(_type: string): _type is AllowedArticleTypes { 
+        // AllowedArticleTypesList.includes(_type) doesnt work because list is defined as readonly/const
+        return AllowedArticleTypesList.findIndex(_allowedType => _allowedType === _type) !== -1; 
+    }
+
     let article: IExternalArticle;
-    if (['pubmed', 'omim', 'hgmd'].includes(type)) {
-        article = { type: type as any, id };
+    if (isValidType(type)) {
+        article = { type, id };
     } else {
         res.status(400).json({ message: 'Error: Invalid type passed in url' });
         return;

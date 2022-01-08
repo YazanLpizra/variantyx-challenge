@@ -3,6 +3,7 @@ import axios from 'axios';
 import { createClient } from 'redis';
 import { HtmlParserService } from ".";
 
+// ref: https://github.com/redis/node-redis/issues/1673#issuecomment-980121749
 export type RedisClientType = ReturnType<typeof createClient>;
 
 export class ArticleRetrieverService {
@@ -19,18 +20,22 @@ export class ArticleRetrieverService {
             return this.cacheClient;
         }
 
-            const host = process.env.REDIS_HOST || ''
-            const port = process.env.REDIS_PORT || ''
-            const password = process.env.REDIS_PASS || '' 
+        try {
+            const host = process.env.REDIS_HOST || '';
+            const port = process.env.REDIS_PORT || '';
+            const password = process.env.REDIS_PASS || '';
 
-        this.cacheClient = createClient({
-            url: `redis://default:${password}@${host}:${port}`
-        });
+            this.cacheClient = createClient({
+                url: `redis://default:${password}@${host}:${port}`
+            });
 
-        await this.cacheClient.connect();
-        console.log(await this.cacheClient.keys('*'))
-        return this.cacheClient;
+            await this.cacheClient.connect();
+            console.log('Cached keys: ', await this.cacheClient.keys('*'));
 
+            return this.cacheClient;
+        } catch (error) {
+            throw new Error("Could not connect to Redis cache");
+        }
     }
 
     static async fetchArticleAbstract(article: IExternalArticle) {
@@ -43,22 +48,17 @@ export class ArticleRetrieverService {
         const cacheClient = await this.getCacheClient();
         const cachedAbstract = await cacheClient.get(article.id);
         if (cachedAbstract) {
-            console.log('cachedAbstract found')
             return cachedAbstract;
         }
 
         try {
             const articlePageHtml = await axios.get(`${baseUrl}/${article.id}`);
             let abstract = HtmlParserService.queryHtmlBySelector(await articlePageHtml.data, '#enc-abstract');
-            if (abstract) {
-                abstract = abstract.toString();
-            } else {
+            if (!abstract) {
                 throw new Error("No abstract found");
             }
 
             cacheClient.set(article.id, abstract);
-
-            console.log('fetched abstract', abstract)
 
             return abstract;
         } catch (error) {
